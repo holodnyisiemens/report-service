@@ -1,5 +1,7 @@
 # REPORT-SERVICE
 
+Service for sending email reports about servers to responsible persons
+
 ## Startup
 
 Clone repository
