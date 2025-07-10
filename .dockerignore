@@ -1,0 +1,12 @@
+.git/
+.vscode/
+__pycache__/
+.venv/
+.env
+.env.local
+.dockerignore
+.gitignore
+docker-compose.yml
+Jenkinsfile
+README.md
+startup.sh
