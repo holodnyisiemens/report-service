@@ -24,14 +24,12 @@ pipeline {
                         def responsible_list = [
                             'username_without_email_domain',
                         ]
-
                         // =============================================
-                        // SET DOMAIN
-                        // Emails will be sent to: username@DOMAIN
-                        // Example DOMAIN: google.com
+                        // Reports will be sent to: username@EMAIL__RECIEVERS_DOMAIN
+                        // EMAIL__RECIEVERS_DOMAIN must be set in .env
                         // =============================================
                         responsible_list.each { responsible ->
-                            echo "Sending report to: ${responsible}@DOMAIN"
+                            echo "Sending report to: ${responsible}"
                             sh """
                                 curl -Lu $API_USER:$API_PASSWORD \
                                     "http://localhost:8000/api/v1/hosts/${responsible}?email_notify=1"
