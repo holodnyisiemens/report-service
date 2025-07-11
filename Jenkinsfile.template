@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+    triggers {
+        // Frequency of reporting
+        cron('H 12 * * 1')
+    }
+    stages {
+        stage('Email Report') {
+            steps {
+                // =============================================
+                // SET JENKINS CREDENTIALS "Username with password"
+                // These credentials will be used for API access
+                // =============================================
+                withCredentials([usernamePassword(
+                    credentialsId: 'api-login',
+                    usernameVariable: 'API_USER',
+                    passwordVariable: 'API_PASSWORD',
+                )]) {
+                    script {
+                        // =============================================
+                        // SET RECIPIENTS LIST (hosts responsible persons)
+                        // Format: ['username1', 'username2', ...]
+                        // =============================================
+                        def responsible_list = [
+                            'username_without_email_domain',
+                        ]
+
+                        // =============================================
+                        // SET DOMAIN
+                        // Emails will be sent to: username@DOMAIN
+                        // Example DOMAIN: google.com
+                        // =============================================
+                        responsible_list.each { responsible ->
+                            echo "Sending report to: ${responsible}@DOMAIN"
+                            sh """
+                                curl -Lu $API_USER:$API_PASSWORD \
+                                    "http://localhost:8000/api/v1/hosts/${responsible}?email_notify=1"
+                            """
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
