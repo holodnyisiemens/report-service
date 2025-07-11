@@ -41,7 +41,8 @@ curl -Lu username:password http://localhost:8000/api/v1/hosts/RESPONSIBLE_NAME?e
 Email address is composed of RESPONSIBLE_NAME and EMAIL__RECIEVERS_DOMAIN from .env
 
 With Jenkins:
-1. Configure Jenkinsfile using template
-2. Create a "Pipeline" job
-3. Insert Jenkinsfile into the "Pipeline script" field
-4. Build it
+1. Configure Jenkins credentials "Username with password" for API access
+2. Configure Jenkinsfile using template
+3. Create a "Pipeline" job
+4. Insert Jenkinsfile into the "Pipeline script" field
+5. Build it
