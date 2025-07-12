@@ -1,13 +1,3 @@
-.git/
-.vscode/
-__pycache__/
-.venv/
-.env
-.env.local
-.dockerignore
-.gitignore
-docker-compose.yml
-Jenkinsfile
-Jenkinsfile.template
-README.md
-startup.sh
+**/.env
+**/.env.local
+**/__pycache__
