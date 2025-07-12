@@ -4,10 +4,8 @@ from core.models import Host
 
 
 def get_all_hosts_query() -> FindMany[Host]:
-    all_hosts_query = Host.find_all()
-    return all_hosts_query
+    return Host.find_all()
 
 
 def get_hosts_query(responsible: str) -> FindMany[Host]:
-    hosts_query = Host.find(Host.responsible == responsible)
-    return hosts_query
+    return Host.find(Host.responsible == responsible)
