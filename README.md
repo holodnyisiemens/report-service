@@ -29,12 +29,22 @@ docker compose up -d --build
 
 ## Examples of using
 
-Without email message:
+Get all responsible:
+```sh
+curl -Lu username:password http://localhost:8000/api/v1/responsible
+```
+
+Get all hosts:
+```sh
+curl -Lu username:password http://localhost:8000/api/v1/hosts
+```
+
+Get hosts of a responsible person without email message:
 ```sh
 curl -Lu username:password http://localhost:8000/api/v1/hosts/RESPONSIBLE_NAME
 ```
 
-With email message:
+Get hosts of a responsible person with email message:
 ```sh
 curl -Lu username:password http://localhost:8000/api/v1/hosts/RESPONSIBLE_NAME?email_notify=1
 ```
