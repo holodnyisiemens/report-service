@@ -3,4 +3,5 @@ __pycache__/
 .venv/
 .env
 .env.local
+docker-compose.local.yml
 Jenkinsfile
