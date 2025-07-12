@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
 
 from .crud import get_all_hosts_query, get_hosts_query
+from ..responsible.crud import get_all_responsible_query
 from core.config import settings
 from core.models import HostEmailReport
 from utils import (
@@ -35,19 +36,26 @@ async def read_hosts_by_responsible(
         hosts = await query_to_docs(hosts_query)
         return hosts
 
-    report_hosts_query = hosts_query.project(HostEmailReport)
-    report_hosts = await query_to_docs(report_hosts_query)
-    report_hosts_html_table = docs_to_html_table(report_hosts)
+    elif responsible not in await get_all_responsible_query():
+        return HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"{responsible} not in responsible list",
+        )
 
-    reciever_email_address = get_email_address(responsible)
+    else:
+        report_hosts_query = hosts_query.project(HostEmailReport)
+        report_hosts = await query_to_docs(report_hosts_query)
+        report_hosts_html_table = docs_to_html_table(report_hosts)
 
-    send_email(
-        reciever_email_address,
-        report_hosts_html_table,
-        email_subject=settings.email.hosts_report_subject,
-    )
+        reciever_email_address = get_email_address(responsible)
 
-    return JSONResponse(
-        content={"status": "ok"},
-        status_code=status.HTTP_200_OK,
-    )
+        send_email(
+            reciever_email_address,
+            report_hosts_html_table,
+            email_subject=settings.email.hosts_report_subject,
+        )
+
+        return JSONResponse(
+            content={"status": "ok"},
+            status_code=status.HTTP_200_OK,
+        )
