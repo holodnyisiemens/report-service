@@ -21,11 +21,15 @@ def docs_to_html_table(docs: list[dict[str, Any]]) -> str:
 
 
 def get_email_address(responsible: str) -> str:
-    if settings.debug == True:
-        email_address = settings.debug_email
+    if settings.debug:
+        return settings.debug_email
+    
+    email_suffix = f"@{settings.email.receivers_domain}"
+
+    if responsible.endswith(email_suffix):
+        return responsible
     else:
-        email_address = f"{responsible}@{settings.email.recievers_domain}"
-    return email_address
+        return responsible + email_suffix
 
 
 def send_email(receiver_email: EmailAddress, content: str, email_subject: str) -> None:
