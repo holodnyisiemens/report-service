@@ -40,7 +40,7 @@ class SMTPConfig(BaseModel):
 
 
 class EmailConfig(BaseModel):
-    recievers_domain: str
+    receivers_domain: str
     hosts_report_subject: str = "[Report] Check your hosts"
 
 
