@@ -22,6 +22,10 @@ def docs_to_html_table(docs: list[dict[str, Any]]) -> str:
 
 def get_email_address(responsible: str) -> str:
     if settings.debug:
+        if not settings.debug_email:
+            raise ValueError(
+                "DEBUG is True but DEBUG_EMAIL is not set in .env file. Set DEBUG_EMAIL or disable DEBUG mode."
+            )
         return settings.debug_email
     
     email_suffix = f"@{settings.email.receivers_domain}"
