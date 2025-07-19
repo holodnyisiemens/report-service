@@ -1,7 +1,11 @@
+import groovy.json.JsonSlurper
+
 pipeline {
     agent any
     triggers {
-        // Frequency of reporting
+        // =============================================
+        // SET FREQUENCY OF REPORTING
+        // =============================================
         cron('H 12 * * 1')
     }
     stages {
@@ -17,23 +21,38 @@ pipeline {
                     passwordVariable: 'API_PASSWORD',
                 )]) {
                     script {
-                        // =============================================
-                        // SET RECIPIENTS LIST (hosts responsible persons)
-                        // Format: ['username1', 'username2', ...]
-                        // =============================================
-                        def responsible_list = [
-                            'username_without_email_domain',
-                        ]
+                        def responsible_list_response = sh(
+                            script: '''
+                                curl -s -Lu "$API_USER:$API_PASSWORD" \
+                                    "http://localhost:8000/api/v1/responsible"
+                            ''',
+                            returnStdout: true
+                        ).trim()
+
+                        def responsible_list = new groovy.json.JsonSlurper().parseText(responsible_list_response)
+
+                        if (!(responsible_list instanceof List)) {
+                            error "A list of responsible persons was expected"
+                        }
+
+                        echo "Responsible list from API: ${responsible_list}"
+
                         // =============================================
                         // Reports will be sent to: username@EMAIL__RECIEVERS_DOMAIN
                         // EMAIL__RECIEVERS_DOMAIN must be set in .env
                         // =============================================
                         responsible_list.each { responsible ->
-                            echo "Sending report to: ${responsible}"
-                            sh """
-                                curl -Lu $API_USER:$API_PASSWORD \
-                                    "http://localhost:8000/api/v1/hosts/${responsible}?email_notify=1"
-                            """
+                            if (responsible && responsible.trim()) {
+                                echo "Sending report to: ${responsible}"
+                                withEnv(["RESPONSIBLE=${responsible}"]) {
+                                    sh '''
+                                        curl -s -Lu "$API_USER:$API_PASSWORD" \
+                                            "http://localhost:8000/api/v1/hosts/$RESPONSIBLE?email_notify=1"
+                                    '''
+                                }
+                            } else {
+                                echo "Skipped empty responsible"
+                            }
                         }
                     }
                 }
