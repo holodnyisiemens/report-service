@@ -21,6 +21,10 @@ pipeline {
                     passwordVariable: 'API_PASSWORD',
                 )]) {
                     script {
+                        // =============================================
+                        // Reports will be sent to: username@EMAIL__RECIEVERS_DOMAIN
+                        // EMAIL__RECIEVERS_DOMAIN must be set in .env
+                        // =============================================
                         def responsible_list_response = sh(
                             script: '''
                                 curl -s -Lu "$API_USER:$API_PASSWORD" \
@@ -37,12 +41,10 @@ pipeline {
 
                         echo "Responsible list from API: ${responsible_list}"
 
-                        // =============================================
-                        // Reports will be sent to: username@EMAIL__RECIEVERS_DOMAIN
-                        // EMAIL__RECIEVERS_DOMAIN must be set in .env
-                        // =============================================
+                        def excludeList = ["", "DevOps", "Devops", "devops"]
+
                         responsible_list.each { responsible ->
-                            if (responsible && responsible.trim()) {
+                            if (responsible && responsible.trim() && !(responsible in excludeList)) {
                                 echo "Sending report to: ${responsible}"
                                 withEnv(["RESPONSIBLE=${responsible}"]) {
                                     sh '''
@@ -51,7 +53,7 @@ pipeline {
                                     '''
                                 }
                             } else {
-                                echo "Skipped empty responsible"
+                                echo "Skipped responsible: '${responsible}'"
                             }
                         }
                     }
