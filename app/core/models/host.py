@@ -1,4 +1,5 @@
 from beanie import Document
+from core.config import settings
 
 
 class Host(Document):
@@ -13,10 +14,4 @@ class Host(Document):
 
 class HostEmailReport(Host):
     class Settings:
-        projection = {
-            "_id": 0,
-            "updatable": 0,
-            "restartable": 0,
-            "zabbixId": 0,
-            "emails": 0,
-        }
+        projection = settings.email.report_mongo_projection

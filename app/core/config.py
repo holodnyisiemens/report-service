@@ -43,6 +43,18 @@ class SMTPConfig(BaseModel):
 class EmailConfig(BaseModel):
     receivers_domain: str
     hosts_report_subject: str = "[Report] Check your hosts"
+    report_mongo_projection: dict = {
+        "_id": 0,
+        "server": 0,
+        "updatable": 0,
+        "restartable": 0,
+        "zabbixId": 0,
+        "launchDate": 0,
+        "description": 0,
+        "nightstop": 0,
+        "kubernetes": 0,
+        "emails": 0,
+    }
 
 
 class Settings(BaseSettings):
