@@ -9,7 +9,7 @@ class Host(Document):
         extra = "allow"
 
     class Settings:
-        name = "hosts"
+        name = settings.mongo.hosts_collection
 
 
 class HostEmailReport(Host):

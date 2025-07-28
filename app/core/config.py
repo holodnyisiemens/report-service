@@ -31,6 +31,7 @@ class AuthConfig(BaseModel):
 class MongoDatabaseConfig(BaseModel):
     url: MongoDsn
     db_name: str
+    hosts_collection: str
 
 
 class SMTPConfig(BaseModel):
