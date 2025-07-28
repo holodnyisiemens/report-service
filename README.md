@@ -24,7 +24,7 @@ vi app/.env
 
 Start service
 ```sh
-docker compose up -d --build
+docker compose up -d
 ```
 
 ## Examples of using
